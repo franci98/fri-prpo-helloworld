@@ -16,8 +16,15 @@ public class PrviJdbcServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        PrintWriter printWriter = resp.getWriter();
-        printWriter.write("Hello World!");
+        PrintWriter pisalec = resp.getWriter();
+        pisalec.write("Hello World! \n");
+
+        String str = ConfigurationUtil.getInstance().get("kumuluzee.name").get();
+        pisalec.write(str + "\n");
+        str = ConfigurationUtil.getInstance().get("kumuluzee.version").get();
+        pisalec.write(str + "\n");
+        str = ConfigurationUtil.getInstance().get("kumuluzee.env.name").get();
+        pisalec.write(str + "\n");
 
     }
 }
