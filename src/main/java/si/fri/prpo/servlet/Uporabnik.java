@@ -7,6 +7,7 @@ public class Uporabnik extends Entiteta {
     public String uporabniskoIme;
 
     public Uporabnik(String ime, String priimek, String uporabniskoIme) {
+        super();
         this.ime = ime;
         this.priimek = priimek;
         this.uporabniskoIme = uporabniskoIme;
