@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Optional;
 
 @WebServlet("/servlet")
@@ -17,14 +18,17 @@ public class PrviJdbcServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         PrintWriter pisalec = resp.getWriter();
-        pisalec.write("Hello World! \n");
+        BaseDao uporabnikDao = UporabnikDaoImpl.getInstance();
+        Uporabnik uporabnik = new Uporabnik("Marko", "Novak", "prpo123");
 
-        String str = ConfigurationUtil.getInstance().get("kumuluzee.name").get();
-        pisalec.write(str + "\n");
-        str = ConfigurationUtil.getInstance().get("kumuluzee.version").get();
-        pisalec.write(str + "\n");
-        str = ConfigurationUtil.getInstance().get("kumuluzee.env.name").get();
-        pisalec.write(str + "\n");
+        pisalec.append("Dodajam uporabnika " + uporabnik.toString());
+        uporabnikDao.vstavi(uporabnik);
+        pisalec.append("\n\n");
+
+        pisalec.append("Seznam obstojecih uporabnikov \n");
+        List<Entiteta> uporabniki = uporabnikDao.vrniVse();
+        uporabniki.stream().forEach(u -> pisalec.append(u.toString() + "\n"));
+
 
     }
 }
