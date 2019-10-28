@@ -13,6 +13,10 @@ public class Uporabnik extends Entiteta {
         this.uporabniskoIme = uporabniskoIme;
     }
 
+    public String toString() {
+        return ime + " " + priimek + " " + uporabniskoIme;
+    }
+
     public String getIme() {
         return ime;
     }
