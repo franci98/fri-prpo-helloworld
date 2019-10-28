@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -77,7 +78,29 @@ public class UporabnikDaoImpl implements BaseDao {
 
     @Override
     public void odstrani(int id) {
+        PreparedStatement ps = null;
 
+        try {
+
+            if (con == null) {
+                con = getConnection();
+            }
+
+            String sql = "DELETE FROM uporabnik WHERE id = ?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+
+        } catch (SQLException e) {
+            log.severe(e.toString());
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    log.severe(e.toString());
+                }
+            }
+        }
     }
 
     @Override
@@ -87,6 +110,35 @@ public class UporabnikDaoImpl implements BaseDao {
 
     @Override
     public List<Entiteta> vrniVse() {
+
+        PreparedStatement ps = null;
+        List<Entiteta> uporabniki = new ArrayList<Entiteta>();
+
+        try {
+
+            if (con == null) {
+                con = getConnection();
+            }
+
+            String sql = "SELECT * FROM uporabnik";
+            ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+                uporabniki.add(getUporabnikFromRS(rs));
+
+            return uporabniki;
+
+        } catch (SQLException e) {
+            log.severe(e.toString());
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    log.severe(e.toString());
+                }
+            }
+        }
         return null;
     }
 }
