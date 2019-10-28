@@ -6,6 +6,12 @@ public class Uporabnik extends Entiteta {
     public String priimek;
     public String uporabniskoIme;
 
+    public Uporabnik(String ime, String priimek, String uporabniskoIme) {
+        this.ime = ime;
+        this.priimek = priimek;
+        this.uporabniskoIme = uporabniskoIme;
+    }
+
     public String getIme() {
         return ime;
     }
