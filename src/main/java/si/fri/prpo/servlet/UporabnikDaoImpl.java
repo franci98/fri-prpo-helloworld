@@ -73,7 +73,33 @@ public class UporabnikDaoImpl implements BaseDao {
 
     @Override
     public void vstavi(Entiteta ent) {
+        PreparedStatement ps = null;
 
+        try {
+
+            if (con == null) {
+                con = getConnection();
+            }
+
+            Uporabnik uporabnik = (Uporabnik) ent;
+            String sql = "INSERT INTO uporabnik (ime, priimek, uporabniskoime) VALUES (?, ?, ?)";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, uporabnik.getIme());
+            ps.setString(2, uporabnik.getPriimek());
+            ps.setString(3, uporabnik.getUporabniskoIme());
+            ps.executeQuery();
+
+        } catch (SQLException e) {
+            log.severe(e.toString());
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    log.severe(e.toString());
+                }
+            }
+        }
     }
 
     @Override
@@ -105,7 +131,34 @@ public class UporabnikDaoImpl implements BaseDao {
 
     @Override
     public void posodobi(Entiteta ent) {
+        PreparedStatement ps = null;
 
+        try {
+
+            if (con == null) {
+                con = getConnection();
+            }
+
+            Uporabnik uporabnik = (Uporabnik) ent;
+            String sql = "UPDATE uporabnik SET ime = ?, priimek = ?, uporabniskoime = ? WHERE id = ?";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, uporabnik.getIme());
+            ps.setString(2, uporabnik.getPriimek());
+            ps.setString(3, uporabnik.getUporabniskoIme());
+            ps.setInt(4, uporabnik.getId());
+            ps.executeQuery();
+
+        } catch (SQLException e) {
+            log.severe(e.toString());
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    log.severe(e.toString());
+                }
+            }
+        }
     }
 
     @Override
