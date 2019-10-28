@@ -15,6 +15,9 @@ public class UporabnikDaoImpl implements BaseDao {
     private Connection con;
     private Logger log = Logger.getLogger(UporabnikDaoImpl.class.getSimpleName());
 
+    public static UporabnikDaoImpl getInstance() {
+        return new UporabnikDaoImpl();
+    }
 
     @Override
     public Connection getConnection() {
