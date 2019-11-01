@@ -18,7 +18,8 @@ public class PrviJdbcServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         PrintWriter pisalec = resp.getWriter();
-        BaseDao uporabnikDao = UporabnikDaoImpl.getInstance();
+        UporabnikDaoImpl uporabnikDao = UporabnikDaoImpl.getInstance();
+        uporabnikDao.pripravi();
         Uporabnik uporabnik = new Uporabnik("Marko", "Novak", "prpo123");
 
         pisalec.append("Dodajam uporabnika " + uporabnik.toString());
@@ -28,7 +29,21 @@ public class PrviJdbcServlet extends HttpServlet {
         pisalec.append("Seznam obstojecih uporabnikov \n");
         List<Entiteta> uporabniki = uporabnikDao.vrniVse();
         uporabniki.stream().forEach(u -> pisalec.append(u.toString() + "\n"));
+        pisalec.append("\n\n");
 
+        pisalec.append("Brišem uporabnika " + uporabnikDao.vrni(1).toString() + "\n");
+        uporabnikDao.odstrani(1);
+        pisalec.append("Seznam obstojecih uporabnikov \n");
+        uporabniki = uporabnikDao.vrniVse();
+        uporabniki.stream().forEach(u -> pisalec.append(u.toString() + "\n"));
+        pisalec.append("\n\n");
+
+        uporabnik = (Uporabnik) uporabnikDao.vrni(4);
+        uporabnik.setIme("Janez");
+        uporabnikDao.posodobi(uporabnik);
+        pisalec.append("Posodobljen seznam obstojecih uporabnikov. \n");
+        uporabniki = uporabnikDao.vrniVse();
+        uporabniki.stream().forEach(u -> pisalec.append(u.toString() + "\n"));
 
     }
 }

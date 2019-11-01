@@ -15,7 +15,7 @@ public class UporabnikDaoImpl implements BaseDao {
     private Connection con;
     private Logger log = Logger.getLogger(UporabnikDaoImpl.class.getSimpleName());
 
-    public static UporabnikDaoImpl getInstance() {
+    static UporabnikDaoImpl getInstance() {
         return new UporabnikDaoImpl();
     }
 
@@ -27,6 +27,40 @@ public class UporabnikDaoImpl implements BaseDao {
             return ds.getConnection();
         } catch (Exception e){return null;}
 
+    }
+
+    public void pripravi() {
+        PreparedStatement ps = null;
+
+        try {
+
+            if (con == null) {
+                con = getConnection();
+            }
+
+            String sql = "DELETE FROM uporabnik";
+            ps = con.prepareStatement(sql);
+            ps.execute();
+
+            sql = "INSERT INTO uporabnik (id, ime, priimek, uporabniskoime) VALUES " +
+                    "(1, 'Franci', 'Klavž', 'fk0036')," +
+                    "(2, 'Janez', 'Detelja', 'det432')," +
+                    "(3, 'Miha', 'Delavec', 'krneki')," +
+                    "(4, 'Matej', 'Miš', 'mismas')";
+            ps = con.prepareStatement(sql);
+            ps.execute();
+
+        } catch (SQLException e) {
+            log.severe(e.toString());
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    log.severe(e.toString());
+                }
+            }
+        }
     }
 
     @Override
@@ -67,11 +101,13 @@ public class UporabnikDaoImpl implements BaseDao {
 
     private Uporabnik getUporabnikFromRS(ResultSet rs) throws SQLException {
 
+        Integer id = rs.getInt("id");
         String ime = rs.getString("ime");
         String priimek = rs.getString("priimek");
         String uporabniskoIme = rs.getString("uporabniskoime");
-        return new Uporabnik(ime, priimek, uporabniskoIme);
-
+        Uporabnik u = new Uporabnik(ime, priimek, uporabniskoIme);
+        u.setId(id);
+        return u;
     }
 
     @Override
@@ -118,6 +154,7 @@ public class UporabnikDaoImpl implements BaseDao {
             String sql = "DELETE FROM uporabnik WHERE id = ?";
             ps = con.prepareStatement(sql);
             ps.setInt(1, id);
+            ps.executeQuery();
 
         } catch (SQLException e) {
             log.severe(e.toString());
@@ -176,7 +213,7 @@ public class UporabnikDaoImpl implements BaseDao {
                 con = getConnection();
             }
 
-            String sql = "SELECT * FROM uporabnik";
+            String sql = "SELECT * FROM uporabnik ORDER BY id ASC";
             ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
